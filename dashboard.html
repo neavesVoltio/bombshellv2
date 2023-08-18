@@ -68,9 +68,12 @@ Francisco Macías para Voltio
       <!-- Button Tab-->
       <section>
         <div class="container p-3">
-          <ul class="nav justify-content-center nav-tabs">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page"  href="#" id="productosTab">Productos</a>
+          <ul class="nav justify-content-center nav-tabs" >
+            <li class="nav-item active">
+              <a class="nav-link active" href="#" id="asistenciaTab">Asistencia</a>
+            </li>
+            <li class="nav-item" style="display: none;">
+              <a class="nav-link" aria-current="page"  href="#" id="productosTab">Productos</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#" id="reservasTab" >Reservas</a>
@@ -82,7 +85,7 @@ Francisco Macías para Voltio
         </div>
       </section>
 <!--    producto section                                -->      
-      <section id="productTabSection">
+      <section id="productTabSection" style="display: none;">
         <div class="container shadow p-3">
           <div class="form-floating mb-3">
             <input type="text" class="form-control"  id="nombreArticulo" aria-label="nombre" aria-describedby="basic-addon1">
@@ -146,8 +149,126 @@ Francisco Macías para Voltio
               
             </div>
           </div>
-        </section>      
-      
+        </section>
+<!--    termina contacto sections                                   --> 
+<!--    asistencia sections         --> 
+        <section id="asistenciaSection" >
+          <div class="row">
+            <div class="container">
+              <div class="container shadow p-3">
+                <div class="form-floating mb-3">
+                  <select class="form-select" aria-label="status views" id="nombreEstilista" >
+                    <option></option>
+                    <option>Ana</option>
+                    <option>Luisa</option>
+                  </select>
+                  <label class="floatingInput">Nombre de la estilista</label>
+                </div>
+                
+                <div class="form-floating mb-3">
+                  <input type="datetime-local" class="form-control"  id="fechaHoraAsistencia" aria-label="fechaHora" aria-describedby="precio-articulo">
+                  <label class="floatingInput">Fecha y hora</label>
+                </div>
+                <div class="form-floating mb-3">
+                  <select class="form-select" aria-label="status views" id="entradaSalida" >
+                    <option></option>
+                    <option>Entrada</option>
+                    <option>Salida</option>
+                  </select>
+                  <label class="floatingInput" >Entrada/Salida</label>
+                </div>
+                <div class="form-floating mb-3">
+                  <input type="text" class="form-control" id="detallesDelSuceso" aria-label="Descripcion" aria-describedby="Descripcion">
+                  <label class="floatingInput" >Comentarios del día</label>
+                </div>
+                  <input type="file" class="form-control mb-3" id="imagenSuceso" aria-label="Imagen" aria-describedby="Imagen">
+                <button class="btn btn-primary" id="guardarEvento">Guardar</button>
+                <div class="container row mt-3">
+                  <div class="row search-container">
+                    <div class="input-group mb-3">
+                      <span class="input-group-text" id="basic-addon1">
+                        <span class="material-symbols-outlined">
+                          search
+                          </span>
+                      </span>
+                      <input type="text" class="form-control" placeholder="Estilista" aria-label="Username" aria-describedby="basic-addon1" id="buscarEstilista">
+                    </div>
+                  </div>
+                  <div class="row" id="tablaAsistenciaContainer">
+                    <div class="table-responsive">
+                      <table class="table table-hover table-light table-sm">
+                        <thead>
+                          <tr >
+                            <th scope="col">Fecha</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Entrada/Salida</th>
+                            <th scope="col">Comentarios</th>
+                          </tr>
+                        </thead>
+                        <tbody id="tableContent">
+                          <tr data-bs-toggle="modal" data-bs-target="#detalleDeAsistenciaModal">
+                            <th class="">...</th>
+                            <td class="">...</td>
+                            <td class="">...</td>
+                            <td class="">...</td>
+                          </tr>
+                          <tr data-bs-toggle="modal" data-bs-target="#detalleDeAsistenciaModal">
+                            <td class="">...</td>
+                            <td class="">...</td>
+                            <td class="">...</td>
+                            <td class="">...</td>
+                          </tr>
+                          <tr data-bs-toggle="modal" data-bs-target="#detalleDeAsistenciaModal">
+                            <td class="">...</td>
+                            <td class="">...</td>
+                            <td class="">...</td>
+                            <td class="">...</td>
+                          </tr>
+                        </tbody>
+                        
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </section>
+    </div>
+    <!-- Modal de asistencia-->
+    <!-- Modal -->
+    <div class="modal fade" id="detalleDeAsistenciaModal" tabindex="-1" aria-labelledby="detalleDeAsistenciaModal" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Imagenes y comentarios</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p id="comentariosModal">En este espacio se cargan los comentarios que se hayan hecho ese día</p>
+            <button type="button" class="btn btn-primary mb-2" id="editAsistencia">Ediar</button>
+            <div id="imagenesDeAsistencia">
+              <div class="row">
+                
+                  <img src="./images/Alaciado.webp" alt="" width="50px" class="mb-2">
+                
+                  <img src="./images/Alaciado.webp" alt="" width="50px" class="mb-2">
+                
+                  <img src="./images/Alaciado.webp" alt="" width="50px" class="mb-2">
+                
+                  <img src="./images/Alaciado.webp" alt="" width="50px" class="mb-2">
+                
+              </div>
+              
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Footer -->
