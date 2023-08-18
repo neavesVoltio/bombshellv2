@@ -1,383 +1,268 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-<meta name="viewport" content="user-scalable=no, initial-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-<link rel="stylesheet" href="src/style.css">
-<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.1/dist/sweetalert2.min.css" rel="stylesheet">
-
-<link rel="stylesheet" href="@sweetalert2/theme-dark/dark.css">
-<title id="title">Voltio App </title>
-<link rel="icon" href="src/ico/favicon.ico">
-</head>
-  <body class="bg-dark bg-gradient " onload="onLoadPage()">
-
-<!-- partial:../../partials/_sidebar.html -->
-<nav class="sidebar bg-dark norol userLogged shadow-lg" id="sidebar" style="display: none;">
-  <div class="sidebar-header bg-transparent shadow-lg">
-    <a href="#" class="noble-ui-logo logo-light d-block mb-2">Voltio<span>Dashboard</span></a>
-  </div>
-  <div class="sidebar-body bg-transparent" >  
-    <ul class="navbar-nav me-auto my-3 navbar-nav-scroll"  style="--bs-scroll-height: 700px; --bs-scroll-background: black;" id="sideBarMenu">
-      <div class="container" id="dashboardMenuSection">
-        <li class="nav-item nav-category  text-white p-2">Main</li>
-        <li class="nav-item  p-2">
-          <a class="nav-link dashboardView"  data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="dashboard" onclick="load_view('dashboard', '- Dashboard')">
-            <span class="material-symbols-outlined text-white dashboardView p-2">home</span>
-            <span class="link-title dashboardView text-white">Home</span>
-          </a>
-        </li>
-      </div>
-      <div class="container" id="leadsMenuSection">
-        <li class="nav-item p-2" style="display: none;">
-          <a class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="searchLeads" onclick="load_view('searchLeads', '- Leads')">
-            <span class="material-symbols-outlined text-white p-2">solar_power</span>
-            <span class="link-title text-white" id="searchLeadsView">Solar Leads</span>
-            <i class="link-arrow text-white" data-feather="chevron-down"></i>
-          </a>
-        </li>
-        <li class="nav-item p-2">
-          <a class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="searchRoofLeadsView" onclick="load_view('searchRoofLeads', '- Roofs')">
-            <span class="material-symbols-outlined text-white p-2">roofing</span>
-            <span class="link-title text-white" id="searchRoofLeadsView">Roof Leads</span>
-            <i class="link-arrow text-white" data-feather="chevron-down"></i>
-          </a>
-        </li>
-        <li class="nav-item p-2">
-          <a class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="searchLeads" onclick="load_view('searchPestControlLeads', '- Pest Control')">
-            <span class="material-symbols-outlined text-white p-2">pest_control_rodent</span>
-            <span class="link-title text-white" id="searchPestControlLeadsView">Pest Control Leads</span>
-            <i class="link-arrow text-white" data-feather="chevron-down"></i>
-          </a>
-        </li>
-      </div>
-      <div class="container" id="projectsMenuSection" style="display: none;">
-        <li class="nav-item p-2">
-          <a class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="customers" onclick="load_view('projects')">
-            <span class="material-symbols-outlined text-white p-2">solar_power</span>
-            <span class="link-title text-white" id="openCustomerView">Projects</span>
-            <i class="link-arrow text-white" data-feather="chevron-down"></i>
-          </a>
-        </li>
-      </div>
-      <div class="container" id="messagesMenuSection">
-        <li class="nav-item p-2">
-          <a class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="messages" onclick="load_view('messages', '- Messages')">
-            <span class="material-symbols-outlined text-white p-2">chat</span>
-            <span class="link-title text-white" id="messagesView">Messages</span>
-            <i class="link-arrow text-white" data-feather="chevron-down"></i>
-          </a>
-        </li>
-      </div>
-      <div class="container" id="stagesMenuSection">
-        <li class="nav-item p-2" style="display: none;">
-          <a class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="users" onclick="load_view('stages', '- Stages')">
-            <span class="material-symbols-outlined text-white p-2">timeline</span>
-            <span class="link-title text-white" id="openStageView">Stages</span>
-            <i class="link-arrow text-white" data-feather="chevron-down"></i>
-          </a>
-        </li>
-      </div>
-      <div class="container" id="userMenuSection">
-        <li class="nav-item nav-category text-white p-2">Users</li>
-        <li class="nav-item p-2 rolAdmin" style="display: none;">
-          <a class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="users" onclick="load_view('memberProfile', '- Team')">
-            <span class="material-symbols-outlined text-white p-2">person</span>
-            <span class="link-title text-white" id="addUserView">Team</span>
-            <i class="link-arrow text-white" data-feather="chevron-down"></i>
-          </a>
-        </li>
-        <li class="nav-item p-2">
-          <a class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="users" onclick="load_view('profile', '- Profile')">
-            <span class="material-symbols-outlined text-white p-2">settings_account_box</span>
-            <span class="link-title text-white" id="addUserView">Profile</span>
-            <i class="link-arrow text-white" data-feather="chevron-down"></i>
-          </a>
-        </li>
-      </div>
-      <div class="container rolAdmin" id="suppliersMenuSection" style="display: none;">
-        <li class="nav-item nav-category text-white p-2">EPC</li>
-        <li class="nav-item p-2">
-          <a class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="suppliers" onclick="load_view('epc', '- Installer')">
-            <span class="material-symbols-outlined text-white p-2">engineering</span>
-            <span class="link-title text-white" id="addNewSupplierView">EPC</span>
-            <i class="link-arrow text-white" data-feather="chevron-down"></i>
-          </a>
-        </li>
-        <li class="nav-item p-2">
-          <a class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="financial" onclick="load_view('financial', '- Financial')">
-            <span class="material-symbols-outlined text-white p-2">credit_score</span>
-            <span class="link-title text-white" id="financialView">Lenders</span>
-            <i class="link-arrow text-white" data-feather="chevron-down"></i>
-          </a>
-        </li>
-      </div>
-      <div class="container" id="resourcesMenuSection">
-        <li class="nav-item nav-category text-white p-2">Resources</li>
-        <li class="nav-item p-2">
-          <a class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="customers" onclick="load_view('resources', '- Resources')">
-            <span class="material-symbols-outlined text-white p-2">file_download</span>
-            <span class="link-title text-white" id="openResourcesView">Resources</span>
-            <i class="link-arrow text-white" data-feather="chevron-down"></i>
-          </a>
-        </li>
-      </div>
-      <div class="container" id="calculatorMenuSection" style="display: none;">
-        <li class="nav-item nav-category text-white p-2">Calculator</li>
-        <li class="nav-item p-2">
-          <a class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="calculator">
-            <span class="material-symbols-outlined text-white p-2">calculate</span>
-            <span class="link-title text-white" id="openCalculatorView">Calculator</span>
-            <i class="link-arrow text-white" data-feather="chevron-down"></i>
-          </a>
-        </li>
-      </div>
-      <div class="container" id="commissionsMenuSection" style="display: none;">
-        <li class="nav-item nav-category text-white p-2">Commissions</li>
-        <li class="nav-item p-2">
-          <a class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="calculator">
-            <span class="material-symbols-outlined text-white">request_quote</span>
-            <span class="link-title text-white" id="openCommissionsView">Commissions</span>
-            <i class="link-arrow text-white" data-feather="chevron-down"></i>
-          </a>
-        </li>
-      </div>
-    </ul>
-  </div>
-</nav>
-
-<!-- partial -->
-<nav class="navbar navbar-expand-lg navbar-light bg-dark norol d-flex userLogged" id="navbar" style="display: none;"> 
-<div class="d-flex container-fluid justify-content-between" style="display: none;" id="navbar-container">
-  <form class="d-flex d-block d-sm-block d-md-block d-lg-none userLogged">
-    <div class="dropdown" >
-    <button class="btn btn-info userLogged norol" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" >
-      Menu
-    </button>
-    <ul class="dropdown-menu bg-dark" aria-labelledby="dropdownMenuButton1">
-      <div class="container" id="menuDashboard">
-        <li class="nav-item mt-2 bg-dark">
-          <a class="nav-link dashboardView text-white" id="dashboardView" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="dashboard" onclick="load_view('dashboard')">
-            <span class="material-symbols-outlined text-white dashboardView p-2">home</span>
-            <span class="link-title dashboardView text-white">Home </span>
-          </a>
-        </li>
-      </div>
-      <div class="container" id="menuLeadsSearc">
-        <li class="nav-item mt-2 bg-dark">
-          <a class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="leads" onclick="load_view('searchLeads', '- Leads')" style="display: none;">
-            <span class="material-symbols-outlined text-white p-2">solar_power</span>
-            <span class="link-title text-white" id="searchLeadsView">Solar Leads</span>
-          </a>
-          <a class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="leads" onclick="load_view('searchRoofLeads', '- Roofs')">
-            <span class="material-symbols-outlined text-white p-2">roofing</span>
-            <span class="link-title text-white" id="searchRoofLeadsView">Roof Leads</span>
-          </a>
-          <a class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="searchPestControlLeads" onclick="load_view('searchPestControlLeads', '- Pest Control')">
-            <span class="material-symbols-outlined text-white p-2">pest_control_rodent</span>
-            <span class="link-title text-white" id="searchPestControlLeadsView">Pest Control Leads</span>
-          </a>
-        </li>
-      </div>
-      <div class="container" id="menuProjects" style="display: none;">
-        <li class="nav-item mt-2 bg-dark">
-          <a class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="customers" onclick="load_view('projects')">
-            <span class="material-symbols-outlined text-white p-2">solar_power</span>
-            <span class="link-title text-white" id="openCustomerView">Projects</span>
-          </a>
-        </li>
-      </div>
-      <div class="container" id="menuMessages">
-        <li class="nav-item mt-2 bg-dark">
-          <a class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="messages" onclick="load_view('messages', '- Messages')">
-            <span class="material-symbols-outlined text-white p-2">chat</span>
-            <span class="link-title text-white" id="openMessagesView">Messages</span>
-          </a>
-        </li>
-      </div>
-      <div class="container" id="menuStage" style="display: none;">
-        <li class="nav-item mt-2 bg-dark">
-          <a class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="users" onclick="load_view('stages', '- Stages')">
-            <span class="material-symbols-outlined text-white p-2">timeline</span>
-            <span class="link-title text-white" id="openStageView">Stages</span>
-          </a>
-        </li>
-      </div>
-      <div class="container" id="menuUsers">
-        <li class="nav-item mt-2 bg-dark rolAdmin" style="display: none;">
-          <a class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="users" onclick="load_view('memberProfile', '- Team')">
-            <span class="material-symbols-outlined text-white p-2">person</span>
-            <span class="link-title text-white" id="addUserView">Team</span>
-          </a>
-        </li>
-        <li class="nav-item mt-2 bg-dark">
-          <a class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="users" onclick="load_view('profile', '- Profile')">
-            <span class="material-symbols-outlined text-white p-2">settings_account_box</span>
-            <span class="link-title text-white" id="addProfileView">Profile</span>
-          </a>
-        </li>
-      </div>
-      <div class="container rolRep rolAdmin" id="menuSuppliers" style="display: none;">
-        <li class="nav-item mt-2 bg-dark">
-          <a class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="leads" onclick="load_view('epc', '- Installer')">
-            <span class="material-symbols-outlined text-white p-2">engineering</span>
-            <span class="link-title text-white" id="addNewSupplierView">EPC</span>
-          </a>
-        </li>
-        <li class="nav-item mt-2 bg-dark">
-          <a class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="financial" onclick="load_view('financial', '- Financial')">
-            <span class="material-symbols-outlined text-white p-2">engineering</span>
-            <span class="link-title text-white" id="financialView">Lenders</span>
-          </a>
-        </li>
-      </div>
-      <div class="container" id="menuResources">
-        <li class="nav-item bg-dark">
-          <a class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="customers" onclick="load_view('resources', '- Resources')">
-            <span class="material-symbols-outlined text-white p-2">file_download</span>
-            <span class="link-title text-white" id="openResourcesView">Resources</span>
-          </a>
-        </li>
-      </div>
-      <div class="container rolAdmin" id="menuCalculator" style="display: none;">
-        <li class="nav-item bg-dark">
-          <a class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="customers">
-            <span class="material-symbols-outlined text-white p-2">calculate</span>
-            <span class="link-title text-white" id="openCalculatorView">Calculator</span>
-          </a>
-        </li>
-      </div>
-      <div class="container rolAdmin" id="menuCommissions" style="display: none;">
-        <li class="nav-item bg-dark">
-          <a class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="customers">
-            <span class="material-symbols-outlined text-white">request_quote</span>
-            <span class="link-title text-white" id="openCommissionsView">Commissions</span>
-          </a>
-        </li>
-      </div>
-    </ul>
-    </div>
+<!DOCTYPE html>
+<!--
+	Francisco Macías para Voltio 
+-->
+<html>
+  <head>
+    <title>APP-BOMBSHELL BEAUTY SPA</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 48
+      }
+      </style>
+      <script src="https://kit.fontawesome.com/c259cdd56c.js" crossorigin="anonymous"></script>
     
-  </form>
-  <p class="userLogged" id="usernameOnMenu"></p> 
-    <a class="btn btn-outline-info userLogged btn-sm border-0" id="logoutButton">
-      <span class="material-symbols-outlined">
-      logout
-      </span>
-    </a>
-</div>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, user-scalable=no"
+    />
+    <link rel="stylesheet" href="./css/main.css" />
+    <link rel="stylesheet" href="./css/fontawesome-all.min.css" />
+    <script src="./main.js" type="module"></script>
+  </head>
 
-</nav>			
+  <body class="landing is-preload">
+    <div id="page-wrapper">
+      <!-- Header -->
+      <header id="header" class="alt">
+        <h1>
+          <a href="index.html">Web oficial: </a>www.bombshellbeautyspa.com
+        </h1>
+        <nav id="nav">
+          <ul id="loginButtonsContainer">
+            <li><a href="index.html">Inicio</a></li>
+            <li>
+              <a href="#" class="icon solid"><span class="material-symbols-outlined">
+                spa
+                </span> Servicios</a>
+              <ul>
+                <li><a href="reservacion.html">Reservaciones</a></li>
+                <li><a href="productos.html">Productos</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
+              </ul>
+            </li>
+            
+          </ul>
+        </nav>
+      </header>
 
-    <!-- <div class="container"> -->
-      <div class="container">
-        <div id="app" class="position-absolute top-50 start-50 translate-middle  w-100 h-100 p-3  d-inline-block text-center"  style="height: 100px;">
-          <!-- login content-->
-          <div class="main-wrapper">
-            <div class="page-wrapper full-page bg-dark bg-gradient border-info">
-              <div
-                class="page-content d-flex align-items-center justify-content-center"
-              >
-                <div class="row w-100 mx-0 auth-page">
-                  <div class="col-md-8 col-xl-6 mx-auto">
-                    <div class="card bg-dark bg-gradient shadow border-radius border-info">
-                      <div class="row">
-                        <div class="col-md-4 pe-md-0">
-                          <div class="auth-side-wrapper" style="background-image:url('../imgs/loginLogoVoltio.png')"></div>
-                        </div>
-                        <div class="col-md-8 ps-md-0">
-                          <div
-                            class="auth-form-wrapper px-4 py-5"
-                            style="--bs-bg-opacity: 0.5"
-                          >
-                            <a href="#" class="noble-ui-logo logo-light d-block mb-2"
-                              >Voltio<span>Dashboard</span></a
-                            >
-                            <h5 class="text-muted fw-normal mb-5 my-5text-light">
-                              Welcome back! Log in to your account.
-                            </h5>
-                            <form class="forms-sample  text-center my-5">
-                              <div id="my-signin2">
-                                  <div style="height:50px;width:240px;background-color: #062c6c;" class="abcRioButton abcRioButtonBlue" fill="#EA4339">
-                                      <div class="abcRioButtonContentWrapper">
-                                          <div class="abcRioButtonIcon" style="padding:15px">
-                                              <div style="width:18px;height:18px;" class="abcRioButtonSvgImageWithFallback abcRioButtonIconImage abcRioButtonIconImage18">
-                                                  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 48 48" class="abcRioButtonSvg">
-                                                    <g>
-                                                      <path fill="#EA4339" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
-                                                      <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path>
-                                                      <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path>
-                                                      <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path>
-                                                      <path fill="none" d="M0 0h48v48H0z"></path>
-                                                    </g>
-                                                  </svg>
-                                              </div>
-                                          </div>
-                                          <span style="font-size:16px;line-height:48px;" class="abcRioButtonContents">
-                                            <span id="not_signed_injlq5rin713ik">Sign in with Google</span>
-                                            <span id="connectedjlq5rin713ik" style="display:none">Signed in with Google</span>
-                                          </span>
-                                      </div>
-                                  </div>
-                              </div>
-                            </form>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+      <!-- Banner -->
+      <section id="banner">
+        <h2>BOMBSHELL</h2>
+        <p>Beauty Bar & Spa.</p>
+        <ul class="actions special">
+          <li>
+            <a
+              href="registro.html"
+              class="button primary noUserLogged"
+              style="display: none;"
+              id="registroButton"
+              >Registrate</a
+            >
+          </li>
+          <li>
+            <a
+              href="acceso.html"
+              class="button noUserLogged"
+              id="ingresaAquiButton"
+              style="display: none;"
+              >Ingresa aquí</a
+            >
+          </li>
+          
+        </ul>
+      </section>
+
+      <!-- Main -->
+      <section id="main" class="container">
+        <section class="box special">
+          <header class="major">
+            <h2>
+              Bienvenidas a nuestra aplicación movil
+              <br />
+              un nuevo servicio exclusivo para ti
+            </h2>
+            <p>
+              Somos un salón siempre a la vanguardia donde encontraras<br />
+              los mejores servicios y las últimas tendencias.
+            </p>
+          </header>
+          <span class="image featured"
+            ><img src="./images/pic01.jpg" alt=""
+          /></span>
+        </section>
+
+        <section class="box special features">
+          
+          <div class="features-row">
+              <section>
+                  <span class="icon solid major fa-calendar accent2"></span>
+                  <h3>Reserva tu cita</h3>
+                  <p>
+                    Puedes ver los horarios disponibles y apartar tu cita para el
+                    servicio que deseas
+                  </p>
+              </section>
+              <section href="productos.html">
+                <span class="icon solid major fa-heart accent2"></span>
+                <h3>Los Mejores productos</h3>
+                <p>
+                  Consulta nuestra lista de productos disponibles para ti y que
+                  puedes comprar en nuestras instalaciones
+                </p>
+              </section>
+          
+          </div>
+          <div class="features-row">
+            <section>
+              <span class="icon solid major fa-star accent2"></span>
+              <h3>Promociones exclusivas</h3>
+              <p>
+                Conoce las promociones que estan disponibles solo para nuestras
+                suscriptoras.
+              </p>
+            </section>
+            <section>
+              <span class="icon solid major fa-gift accent2"></span>
+              <h3>Tarjeta de regalo</h3>
+              <p>
+                Un gran detalle para esa persona especial a la que puedes
+                consentir con una gran experiencia de belleza y glamour.
+              </p>
+            </section>
+          </div>
+        </section>
+
+        <div class="row">
+          <div class="col-6 col-12-narrower">
+            <section class="box special">
+              <span class="image featured"
+                ><img src="./images/pic02.jpg" alt=""
+              /></span>
+            </section>
+          </div>
+          <div class="col-6 col-12-narrower">
+            <section class="box special">
+              <span class="image featured"
+                ><img src="./images/pic03.jpg" alt=""
+              /></span>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <section id="cta">
+        <h2>Recomienda esta aplicación a tus amigas</h2>
+        <p>
+          Envia el correo electronico de tu amiga para enviarle su acceso
+          completamente gratis.
+        </p>
+
+        <form>
+          <div class="row gtr-50 gtr-uniform">
+            <div class="col-8 col-12-mobilep">
+              <input
+                type="email"
+                name="email"
+                id="emailRecomendation"
+                placeholder="Email Address"
+              />
+            </div>
+            <div class="col-4 col-12-mobilep">
+              <input type="button" value="Enviar" class="fit" id="recomendationButton"/>
             </div>
           </div>
-          <script>
-            function onSuccess(googleUser) {
-                console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
-            }
-            function onFailure(error) {
-                console.log(error);
-            }
-            
-            function renderButton() {
-                gapi.signin2.render('my-signin2', {
-                'scope': 'profile email',
-                'width': 240,
-                'height': 50,
-                'longtitle': true,
-                'theme': 'dark',
-                'onsuccess': onSuccess,
-                'onfailure': onFailure
-                });
-            }
-          </script>
-          <!--End login content-->
-        </div>
-      </div>
+        </form>
+      </section>
+
+      <!-- Footer -->
+      <footer id="footer">
+        <ul class="icons">
+          <li>
+            <a
+              href="https://www.facebook.com/bombshellmxl"
+              target="_blank"
+              class="icon brands fa-facebook-f"
+              ><span class="label">Facebook</span></a
+            >
+          </li>
+          <li>
+            <a
+              href="https://www.instagram.com/bombshellmxl"
+              target="_blank"
+              class="icon brands fa-instagram"
+              ><span class="label">Instagram</span></a
+            >
+          </li>
+          <li>
+            <a
+              href="https://api.whatsapp.com/send?phone=526861766112"
+              target="_blank"
+              class="icon brands fa-whatsapp"
+              ><span class="label"> Whatsapp</span></a
+            >
+          </li>
+        </ul>
+        <ul class="copyright">
+          <li>&copy; Todos los derechos reservados.</li>
+          <li>
+            Pagina oficial:
+            <a href="https://www.bombshellbeautyspa.com/" target="_blank"
+              >bombshellbeautyspa.com</a
+            >
+          </li>
+          <li>
+            <a
+              href="#"
+              class="btn adminAccess"
+              id="adminDashboard"
+              >Admin Dashboard</a
+            >
+          </li>
+          <li>
+            <a
+              href="#"
+              class="btn userLoggedSub"
+              style="display: none;"
+              id="userLoggedSub"
+              >Logout</a
+            >
+          </li>
+        </ul>
         
-    <!-- CONTENT HERE -->
-      <!-- partial:../../partials/_footer.html -->
-      <footer class="footer d-flex flex-column flex-md-row align-items-center justify-content-between px-4 py-3 border-top small bg-dark text-light">
-        <p class="text-muted mb-1 mb-md-0">Copyright © 2023 <a target="_blank">Voltio</a>.</p>
       </footer>
-      <!-- partial -->
-        <!-- Modal -->
+    </div>
 
-        <div id="loading" class="d-flex justify-content-center align-items-center invisible">
-        
-            <div class="spinner-border text-white" style="width: 3rem; height: 3rem;" role="status">
-               <span class="sr-only">Loading...</span>
-            </div>
-        
-        </div>
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/toastify-js"
+    ></script>
+    <script src="./js/jquery.min.js"></script>
+    <script src="./js/jquery.dropotron.min.js"></script>
+    <script src="./js/jquery.scrollex.min.js"></script>
+    <script src="./js/breakpoints.min.js"></script>
+    <script src="./js/util.js"></script>
+    <script src="./js/main.js"></script>
+    <script type="module" src="./app/logout.js"></script>
+    <script type="module" src="./app/recomendarPagina.js"></script>
+    <script type="module" src="./app/adminPasswordPopup.js"></script>
+    <script src="./js/sweetAlert.js"></script>
 
-        <script type="module" src="src/googleAuth.js"></script>
-        <script type="module" src="src/js/userLogged.js"></script>
-        <script type="module" src="src/js/logout.js"></script>
-        <script type="module" src="src/js/adminAccess.js"></script>
-        <script src="src/js/bootstrap.js"></script>
-        <script src="src/main.js"></script>
+    
+    <script type="module" src="./main.js"></script>
   </body>
 
 </html>
