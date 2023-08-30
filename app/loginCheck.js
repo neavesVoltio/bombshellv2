@@ -36,7 +36,7 @@ onAuthStateChanged(auth, async(user) => {
         });
         
         if(currentHostname == '/dashboard.html' && uid !== getAdmin[0]){
-            window.open(webDomain + '/index.html', '_self');
+            // window.open(webDomain + '/index.html', '_self');
             showMessages('Solo administradores', 'error')
             
         }
@@ -44,7 +44,7 @@ onAuthStateChanged(auth, async(user) => {
     } else {
         
         if(currentHostname == '/dashboard.html'){
-            window.open(webDomain + '/index.html', '_self');
+           // window.open(webDomain + '/index.html', '_self');
         }
 
         console.log('user is not logged loginCheck.js')
