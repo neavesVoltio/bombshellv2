@@ -1,403 +1,295 @@
-import { getFirestore, doc, getDoc, collection, getDocs, query, where, deleteDoc, orderBy, updateDoc  } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-firestore.js"
+import { getFirestore, doc, getDoc, collection, getDocs, query, where, deleteDoc, orderBy, updateDoc, addDoc  } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-firestore.js"
 import { app } from './firebase.js'
 const db = getFirestore(app) 
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-auth.js";
 import { auth } from './firebase.js'
+console.log("attendanceAdmin");
+// codigo para guardar la asistencia
+let consecutivo
+const miModal = new bootstrap.Modal(document.getElementById('detalleDeAsistenciaModal'));
+let rowId
+onAuthStateChanged(auth, (user) => {
+  if(user){
+    let guardarEvento = document.getElementById('guardarEvento');
+    guardarEvento.addEventListener('click', function (e) {
+      console.log("click guardar");
+      console.log("saving attendance");
+      let nombreEstilistaE = document.getElementById('nombreEstilista');
+      let fechaHoraAsistenciaE = document.getElementById('fechaHoraAsistencia');
+      let horaSalidaE = document.getElementById('horaSalida');
+      let detallesDelSucesoE = document.getElementById('detallesDelSuceso');
+      let comentariosModal = document.getElementById('comentariosModal');
+      
+          comentariosModal.innerHTML = detallesDelSucesoE.value
 
+      let nombreEstilista = nombreEstilistaE.value;
+      let fechaHoraAsistencia = fechaHoraAsistenciaE.value;
+      let horaSalida = horaSalidaE.value;
+      let detallesDelSuceso = detallesDelSucesoE.value;
+      if(!nombreEstilista || !fechaHoraAsistencia || !horaSalida){
+       // miModal.show();
+          // Para cerrar el modal
+        //miModal.hide();
 
-let orderByDateButton = document.querySelector('#orderByDateButton')
-let viewCompleted = document.querySelector('#viewCompleted')
-
-orderByDateButton.addEventListener('click', (e)=>{
-  if(e.target.dataset.stat === 'asc'){
-    let stat = 'asc'
-    getReservas(e.target.dataset.stat, viewCompleted.value)
-    e.target.dataset.stat = 'desc'
-  } else if(e.target.dataset.stat === 'desc'){
-    let stat = 'asc'
-    getReservas(e.target.dataset.stat, viewCompleted.value)
-    e.target.dataset.stat = 'asc'
-  }
-  
-})
-
-viewCompleted.addEventListener('change', (e)=>{
-  if(e.target.value === 'proceso'){
-    getReservas('asc', e.target.value)
-  } else if(e.target.value === 'completada'){
-    getReservas('asc', e.target.value)
-  }
-  
-})
-
-export function getReservas(stat, estatus){
-  let reservasContainer = document.getElementById('reservasContainer')
-  reservasContainer.innerHTML = ''
-onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    
-    let orderByStat = stat
-    console.log('estatus' +estatus);
-    console.log('start' + stat);
-    const reserva = query(collection(db, 'reservaciones'), where('estatus', '==', estatus), orderBy("start", stat));
-    //query(collection(db, 'reservaciones'), where('email', '==', user.email));
-    const querySnapshot = await getDocs(reserva);
-    const allData = querySnapshot.forEach((doc) => {
-        // doc.data() is never undefined for query doc snapshots
-      //console.log(doc.id, ' => ', doc.data());
-      let cobrado = !doc.data().totalCobrado ? '' : doc.data().totalCobrado
-      console.log(doc.data());
-      let today = new Date()
-      let newDate = new Date(doc.data().start)
-      /*if(today>newDate){
+        Swal.fire({
+          icon: 'error',
+          title: 'Faltan campos por llenar',
+          text: `Por favor, rellene los campos de nombre y fechas antes de continuar!`,
+          confirmButtonText: 'OK'
+        });
         return
-      }*/
-      let months = ["enero", "febrero", "marzo", 'abril', "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"]
-      let month = months[newDate.getMonth()] 
-      let hours = newDate.getHours() < 10 ?  '0'+ newDate.getHours() : newDate.getHours()
-      let minutes = newDate.getMinutes() < 10 ?  '0'+ newDate.getMinutes() : newDate.getMinutes()
-      let date = newDate.getDate() + ' de ' + month + ' del ' + newDate.getFullYear() + ' ' + hours+':'+minutes+' hrs'
-      let services = doc.data().services;
-      // try {services.forEach(e => console.log(e))} catch(error){console.log(error);}
-      
-        //for(i=0, i < doc.data().services.length(), i++){
-        // services.push(...doc.data().services)
-      // }
-      let mainDiv = document.getElementById('reservasContainer')
-      let divContainer = document.createElement('div')
-      let divCard = document.createElement('div')
-      let divCardHeader = document.createElement('div')
-      let h4Date = document.createElement('h4')
-      let divCardBoddy = document.createElement('div')
-      let h4CustomerName = document.createElement('h4')
-      let pServicios = document.createElement('p')
-      let divPrecioInicial = document.createElement('div')
-      let divFormSelect = document.createElement('div')
-      let selectAssignedName = document.createElement('select')
-      let optionEmpty = document.createElement('option')
-      let optionEmployee1 = document.createElement('option')
-      let optionEmployee2 = document.createElement('option')
-      let labelAssignedName = document.createElement('label')
-      let divFormTotalCobrado = document.createElement('div')
-      let inputTotalCobrado = document.createElement('input')
-      let labelTotalCobrado = document.createElement('label')
-      let divFormDesc = document.createElement('div')
-      let inputDesc = document.createElement('input')
-      let labelDesc = document.createElement('label')
-      let divFormObservac = document.createElement('div')
-      let textAreaObservac = document.createElement('textarea')
-      let labelObservac = document.createElement('label')
-      let divCardFooter = document.createElement('div')
-      let divMenuDropdown = document.createElement('div')
-      let buttonMenu = document.createElement('button')
-      let ulDropdownMenu = document.createElement('ul')
-      let liEditar = document.createElement('li')
-      let liCancelar = document.createElement('li')
-      let liReAgendar = document.createElement('li')
-      let liCompletada = document.createElement('li')
-      let btnCancelar = document.createElement('button')
-      let btnReAgendar = document.createElement('button')
-      let btnCompletada = document.createElement('button')
-
-      divContainer.className = 'col'
-      divCard.className = 'card shadow col h-100'
-      divCardHeader.className = 'card-header'
-      h4Date.className = 'fw-bold text-center'
-      h4Date.textContent = date
-      divCardBoddy.className = 'card-boddy p-2'
-      h4CustomerName.className = 'fw-bold text-center'
-      h4CustomerName.textContent = doc.data().title
-      pServicios.className = 'text-center'
-      pServicios.textContent = services
-      divPrecioInicial.className = 'h5 p-2 fw-bolder text-end'
-      divPrecioInicial.textContent = 'Precio Inicial: $ 500.00'
-      divFormSelect.className = 'form-floating mb-2'
-      selectAssignedName.className = 'form-select text-end persona'
-      selectAssignedName.dataset.reservationId = doc.id
-      optionEmployee1.textContent = 'Brenda'
-      optionEmployee2.textContent = 'Ana'
-      labelAssignedName.textContent = 'Asignado a:'
-      divFormTotalCobrado.className = 'form-floating mb-2'
-      inputTotalCobrado.className = 'form-control text-end totalCobrado'
-      inputTotalCobrado.type = 'number'
-      inputTotalCobrado.name = 'price'
-      inputTotalCobrado.value = !doc.data().totalCobrado ? '' : doc.data().totalCobrado
-      inputTotalCobrado.dataset.reservationId = doc.id
-      labelTotalCobrado.textContent = 'Total cobrado'
-      divFormDesc.className = 'form-floating mb-2'
-      inputDesc.dataset.reservationId = doc.id
-      inputDesc.className = 'form-control text-end codigoDescuento'
-      inputDesc.type = 'text'
-      inputDesc.name = 'descuento'
-      inputDesc.value = !doc.data().codigoDescuento ? '' : doc.data().codigoDescuento
-      labelDesc.textContent = 'Codigo de descuento'
-      divFormObservac.className = 'form-floating mb-2'
-      textAreaObservac.className = 'form-control observaciones'
-      textAreaObservac.value = !doc.data().observaciones ? '' : doc.data().observaciones
-      textAreaObservac.dataset.reservationId = doc.id
-      textAreaObservac.style.height = '200px'
-      textAreaObservac.textContent = 'Esta es la descripcion del servicio a realizar'
-      labelObservac.textContent = 'Observaciones'
-      divCardFooter.className = 'card-footer mt-auto py-3'
-      divMenuDropdown.className = 'dropdown'
-      buttonMenu.className = 'btn btn-primary dropdown-toggle'
-      buttonMenu.type = 'button'
-      buttonMenu.setAttribute("data-bs-toggle", "dropdown");
-      buttonMenu.dataBsToggle="dropdown"
-      buttonMenu.textContent="Acciones"
-      ulDropdownMenu.className = 'dropdown-menu'
-      liEditar
-      liCancelar
-      liReAgendar
-      liCompletada
-      btnCancelar.className = 'dropdown-item btnCancelarReserva'
-      btnCancelar.type = 'button'
-      btnCancelar.textContent = 'Cancelar'
-      btnCancelar.dataset.startDate = doc.id
-      btnReAgendar.className = 'dropdown-item'
-      btnReAgendar.type = 'button'
-      btnReAgendar.textContent = 'Re Agendar'
-      btnCompletada.className = 'dropdown-item btnCompletada'
-      btnCompletada.style.display = !doc.data().totalCobrado ? 'none' : 'block'
-      btnCompletada.id = doc.id
-      btnCompletada.type = 'button'
-      btnCompletada.textContent = 'Completada'
-      btnCompletada.dataset.reservationId = doc.id
-      
-
-      mainDiv.appendChild(divContainer)
-      divContainer.appendChild(divCard)
-      divCard.appendChild(divCardHeader)
-      divCard.appendChild(divCardBoddy)
-      divCard.appendChild(divCardFooter)
-      divCardHeader.append(h4Date)
-      divCardBoddy.append(h4CustomerName)
-      divCardBoddy.append(pServicios)
-      divCardBoddy.append(divPrecioInicial)
-      divCardBoddy.append(divFormSelect)
-      divCardBoddy.append(divFormTotalCobrado)
-      divCardBoddy.append(divFormDesc)
-      divCardBoddy.append(divFormObservac)
-      divFormSelect.appendChild(selectAssignedName)
-      selectAssignedName.append(optionEmpty)
-      selectAssignedName.append(optionEmployee1)
-      selectAssignedName.append(optionEmployee2)
-      divFormSelect.appendChild(selectAssignedName)
-      divFormTotalCobrado.appendChild(inputTotalCobrado)
-      divFormTotalCobrado.appendChild(labelTotalCobrado)
-      divFormDesc.appendChild(inputDesc)
-      divFormDesc.appendChild(labelDesc)
-      divFormObservac.appendChild(textAreaObservac)
-      divFormObservac.appendChild(labelObservac)
-      
-      if(doc.data().estatus != 'completada'){
-        divCardFooter.append(divMenuDropdown)
-        divMenuDropdown.append(buttonMenu)
-        divMenuDropdown.append(ulDropdownMenu)
-        ulDropdownMenu.appendChild(liEditar)
-        ulDropdownMenu.appendChild(liCancelar)
-        ulDropdownMenu.appendChild(liReAgendar)
-        ulDropdownMenu.appendChild(liCompletada)
-        liCompletada.appendChild(btnCompletada)
-        liCancelar.appendChild(btnCancelar)
-        //liReAgendar.appendChild(btnReAgendar)
-      } else{
-        selectAssignedName.setAttribute('disabled', true);
-        inputTotalCobrado.setAttribute('disabled', true);
-        inputDesc.setAttribute('disabled', true);
-        textAreaObservac.setAttribute('disabled', true);
-        divCardFooter.textContent = 'Completada'
+      } else {
+        miModal.show()
+        getAttendanceConsec()
+        let editAsistencia = document.getElementById('editAsistencia');
+        editAsistencia.style.display = "none"
       }
       
+    });
 
-      selectAssignedName.value = doc.data().empleado
-      return cobrado
-      
-    })
-  // Funcion al event listener de actualizar drop down --------------------
-    let persona = document.querySelectorAll('.persona')
-    let totalCobrado = document.querySelectorAll('.totalCobrado')
-    let codigoDescuento = document.querySelectorAll('.codigoDescuento')
-    let observaciones = document.querySelectorAll('.observaciones')
-    let btnCompletada = document.querySelectorAll('.btnCompletada')
-    let btnCancelarReserva = document.querySelectorAll('.btnCancelarReserva')
+  }else{
+    console.log("no user");
+  }
+})
 
-    persona.forEach( btn => {
-      btn.addEventListener('change', async(e)=>{
-        let reservationId = e.target.dataset.reservationId
-        const docRef = doc(db, "reservaciones", reservationId) 
-        await updateDoc ((docRef), {
-          empleado: btn.value
-        })
-        .then(() => {
-          // Data saved successfully!
-          console.log('actualizado');
-        })
-        .catch((error) => {
-          // The write failed...
-          console.log('no actualizado');
-        });
-      })
-    })
-    
-    totalCobrado.forEach( btn => {
-      btn.addEventListener('blur', async(e)=>{
-        let reservationId = e.target.dataset.reservationId
-        let noPrice = e.target.value
-        if (noPrice === ''){
-          console.log('precio vacio');
-        } else {
-          let btnCompletadaSingle = document.getElementById(reservationId)
-          btnCompletadaSingle.style.display = 'block'
-          console.log(reservationId);
-          const docRef = doc(db, "reservaciones", reservationId) 
-          await updateDoc ((docRef), {
-            totalCobrado: btn.value
-          })
-          .then(() => {
-            // Data saved successfully!
-            console.log('actualizado');
-          })
-          .catch((error) => {
-            // The write failed...
-            console.log('no actualizado');
-          });
-        }
-        
-      })
-    })
-
-    codigoDescuento.forEach( btn => {
-      btn.addEventListener('blur', async(e)=>{
-        let reservationId = e.target.dataset.reservationId
-        console.log(reservationId);
-        const docRef = doc(db, "reservaciones", reservationId) 
-        await updateDoc ((docRef), {
-          codigoDescuento: btn.value
-        })
-        .then(() => {
-          // Data saved successfully!
-          console.log('actualizado');
-        })
-        .catch((error) => {
-          // The write failed...
-          console.log('no actualizado');
-        });
-      })
-    })
-
-    observaciones.forEach( btn => {
-      btn.addEventListener('blur', async(e)=>{
-        let reservationId = e.target.dataset.reservationId
-        console.log(reservationId);
-        const docRef = doc(db, "reservaciones", reservationId) 
-        await updateDoc ((docRef), {
-          observaciones: btn.value
-        })
-        .then(() => {
-          // Data saved successfully!
-          console.log('actualizado');
-        })
-        .catch((error) => {
-          // The write failed...
-          console.log('no actualizado');
-        });
-      })
-    })
-
-    btnCancelarReserva.forEach( btn  => {
-      btn.addEventListener('click', async (e) => {
-        Swal.fire({
-          title: 'Desea cancelar la reservación?',
-          showDenyButton: true,
-          showCancelButton: false,
-          confirmButtonText: 'Regresar',
-          denyButtonText: `Cancelar reserva`,
-        }).then(async(result) => {
-          /* Read more about isConfirmed, isDenied below */
-          if (result.isConfirmed) {
-            Swal.fire({
-              text:'La reserva no se ha cancelado',
-              icon: 'info',  
-              timer: 2000,
-              showConfirmButton: false,
-              position: 'top-end',
-            })
-          } else if (result.isDenied) {
-            
-            let startDate = e.target.dataset.startDate
-            //const reservation = query(collection(db, 'reservaciones'), where('start', '==', e.target.dataset.startDate));
-            //const querySnapshot = await getDocs(reservation);
-            const docRef = doc(db, "reservaciones", startDate) 
-            await deleteDoc(docRef);
-            getReservas(stat)
-            Swal.fire({
-              text:'Reserva cancelada',
-              icon:'success',
-              timer: 2000,
-              showConfirmButton: false,
-              position: 'bottom-end',
-            })
-            return
-          }
-        })
-        
-      })
-    })
-
-    btnCompletada.forEach( btn  => {
-      btn.addEventListener('click', async (e) => {
-        Swal.fire({
-          title: 'Desea marcar como completada la reservación?',
-          showDenyButton: true,
-          showCancelButton: false,
-          confirmButtonText: 'Completada',
-          denyButtonText: `Regresar`,
-        }).then(async(result) => {
-          /* Read more about isConfirmed, isDenied below */
-          if (result.isConfirmed) {
-            let reservationId = e.target.dataset.reservationId
-            const docRef = doc(db, "reservaciones", reservationId) 
-            await updateDoc ((docRef), {
-              estatus: 'completada'
-            }).then(()=>{
-              getReservas('asc', 'proceso')
-              Swal.fire({
-                text:'Reserva actualizada',
-                icon:'success',
-                timer: 2000,
-                showConfirmButton: false,
-                position: 'bottom-end',
-              })
-              return
-            }).catch((error) => {
-              // The write failed...
-              console.log('no actualizado');
-            });
-            
-          } else if (result.isDenied) {
-            Swal.fire({
-              text:'La reserva no se ha actualizado',
-              icon: 'info',  
-              timer: 2000,
-              showConfirmButton: false,
-              position: 'top-end',
-            })
-          }
-        })
-        
-      })
-    })
-
-
-
-
-} else {
-  console.log('no user logged on reservation admin');
-}
-});
-}
-
-
-    
+function getAttendanceConsec(){
   
+const attendanceId = "A2cwCOeNG3X69AdcIcVP"; // ID que estás buscando
+
+// Obtén el registro de attendance con el ID específico
+const attendanceRef = doc(db, "attendance", attendanceId);
+
+// Obtén los datos del documento
+getDoc(attendanceRef)
+  .then(async (docSnapshot) => {
+    if (docSnapshot.exists()) {
+      const attendanceData = docSnapshot.data();
+      await updateDoc(attendanceRef, { consecutivo: attendanceData.consecutivo + 1 });
+      console.log("Registro de Attendance:", attendanceData.consecutivo);
+      consecutivo = attendanceData.consecutivo
+      saveAttendanceToDb(attendanceData.consecutivo) 
+    } else {
+      console.log("No se encontró el registro de Attendance con el ID especificado.");
+    }
+  })
+  .catch((error) => {
+    console.error("Error al obtener el registro de Attendance:", error);
+  });
+}
+
+async function saveAttendanceToDb(cons) {
+  console.log("saving attendance");
+  let nombreEstilistaE = document.getElementById('nombreEstilista');
+  let fechaHoraAsistenciaE = document.getElementById('fechaHoraAsistencia');
+  let horaSalidaE = document.getElementById('horaSalida');
+  let detallesDelSucesoE = document.getElementById('detallesDelSuceso');
+  let comentariosModal = document.getElementById('comentariosModal');
+  
+      comentariosModal.innerHTML = detallesDelSucesoE.value
+
+  let nombreEstilista = nombreEstilistaE.value;
+  let fechaHoraAsistencia = fechaHoraAsistenciaE.value;
+  let horaSalida = horaSalidaE.value;
+  let detallesDelSuceso = detallesDelSucesoE.value;
+
+  if(!nombreEstilista || !fechaHoraAsistencia || !horaSalida ){
+    console.log("complete los campos requeridos");
+  } else {
+    try{
+    // Guarda los datos en Firestore
+    const attendanceCollection = collection(db, 'attendance');
+    await addDoc(attendanceCollection, {
+      nombreEstilista,
+      fechaHoraAsistencia,
+      horaSalida,
+      detallesDelSuceso,
+      cons,
+      timestamp: new Date() // Agrega una marca de tiempo del servidor
+    });
+
+    console.log('Datos guardados exitosamente en Firestore.');
+  } catch (error) {
+    console.error('Error al guardar los datos en Firestore:', error);
+  }
+  }
+}
+
+//   <img src="./images/Alaciado.webp" alt="" width="50px" class="mb-2">
+// guardar en la coleccion attendanceImages
+
+
+// START SECTION TO UPLOAD IMAGES
+
+let customerFilesUpload =  document.querySelector('#customerFilesUpload');
+  
+customerFilesUpload.addEventListener('change', function (e) {
+  // Inicia el sweet alert 
+  const progressAlert = Swal.fire({
+    title: 'loading file...',
+    html: '<div class="progress"><div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div></div>',
+    showCancelButton: false,
+    showConfirmButton: false,
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    allowEnterKey: false
+  });
+  // termina el sweet alert
+
+  console.log('customer files upload chganged');
+  let url = "https://script.google.com/macros/s/AKfycbywfFmRp00P7vFhQWgvr3k8fVwcEGIAB4GucWkM44Zxu78eB93jPxlTNcPD0KpIHb8/exec"
+  console.log('file change');
+  let fr = new FileReader()
+  fr.addEventListener('loadend', function (e) {
+    let res = fr.result
+    
+    let spt = res.split('base64,')[1]
+    console.log(customerFilesUpload.files[0].type);
+    let obj = {
+      base64:spt,
+      type:customerFilesUpload.files[0].type,
+      name:nombreEstilista
+    }
+    console.log(obj);
+    let response =  fetch(url, {
+        method:'POST',
+        body: JSON.stringify(obj),
+      })
+    .then(r=>r.text())
+    .then(data => {
+      console.log(data);
+      try {
+        const response = JSON.parse(data);
+        console.log(response.link);
+        
+        saveToUtilityBillCollection(response.link)
+        // Cerrar el Sweet Alert
+        progressAlert.close();
+        // Mostrar una alerta de éxito
+        Swal.fire({
+          icon: 'success',
+          title: 'File loaded',
+          text: `The file has been loaded`,
+          confirmButtonText: 'OK'
+        });
+      } catch (e) {
+        console.error("Error al analizar la respuesta JSON: ", e);
+      }
+    })
+    .catch(err => {
+      console.error("Error en la solicitud POST: ", err);
+    });
+  });
+  fr.readAsDataURL(customerFilesUpload.files[0])
+});
+
+async function saveToUtilityBillCollection(link) {
+  try {
+
+    const docRef = await addDoc(collection(db, 'attendanceImages'), {
+      cons: consecutivo,
+      link: link,
+      timestamp: new Date().toISOString()
+    }).then(getImagesFromUtilityBillCollection())
+
+  } catch (error) {
+    console.error('Error al guardar los datos:', error);
+  }
+}
+
+let viewCustomersImageButton = document.getElementById('imagenesDeAsistencia');
+
+viewCustomersImageButton.addEventListener('click', function (e) {
+  getImagesFromUtilityBillCollection()
+});
+
+async function getImagesFromUtilityBillCollection(){
+  const billsCol = collection(db, 'attendanceImages');
+  const q = query(billsCol, where('cons', '==', parseInt(consecutivo)));
+  const querySnapshot = await getDocs(q);
+  const bills = querySnapshot.docs.map((doc) => {
+    doc.data()
+    console.log(doc.data());
+    generateThumbnail(doc.data().link, doc.data().cons)
+  });
+  //generateUtilityBillImagesHTML(bills)
+  
+  /*
+  const thumbnailElements = bills.map((thumbnail) => {
+    console.log(thumbnail);
+    generateThumbnail(thumbnail.link, thumbnail.cons)
+
+  });
+  */
+
+  //insertThumbnails(thumbnailElements);
+  
+}
+
+function generateThumbnail(link, cons) {
+  const container = document.getElementById('imagenesDeAsistencia');
+  const customerFilesUpload = document.getElementById('customerFilesUpload');
+  customerFilesUpload.value = ''
+
+  const thumbnailDiv = document.createElement('div');
+  thumbnailDiv.classList.add('col-sm-6', 'col-md-3');
+
+  const thumbnail = document.createElement('div');
+  thumbnail.classList.add('thumbnail');
+
+  const image = document.createElement('img');
+  image.classList.add('img-thumbnail', 'mb-2');
+  image.src = link;
+  image.alt = cons;
+
+  const closeButton = document.createElement('button');
+  closeButton.classList.add('close');
+  closeButton.innerHTML = '&times;';
+  closeButton.addEventListener('click', () => thumbnailDiv.remove());
+
+  thumbnail.appendChild(image);
+  //thumbnail.appendChild(closeButton);
+  thumbnailDiv.appendChild(thumbnail);
+
+  image.addEventListener('click', () => window.open(link, '_blank'));
+  container.appendChild(thumbnailDiv)
+  return thumbnailDiv;
+}
+
+function insertThumbnails(thumbnails) {
+  const container = document.getElementById('imagenesDeAsistencia');
+  const customerFilesUpload = document.getElementById('customerFilesUpload');
+  customerFilesUpload.value = ''
+  container.innerHTML = ''
+  thumbnails.forEach((thumbnail) => container.appendChild(thumbnail));
+}
+// END OF UPLOAD IMAGE SECTION
+
+// OBTENER LOS DATOS DE LA BD PARA LLENAR LA TABLA DE ASISTENCIAS
+let dataRow = document.querySelectorAll('.tableRow');
+dataRow.forEach(function(item) {
+  item.addEventListener('click', function (e) {
+    if (e.target.closest('.tableRow')) {
+      consecutivo = e.target.closest('.tableRow').dataset.id
+      console.log(e.target.closest('.tableRow').dataset.id);            
+      getImagesFromUtilityBillCollection(rowId)
+    }
+  });
+  
+}); 
+function getDbData(){
+  let miConsecutivo
+  // Realiza la consulta
+const attendanceCollection = collection(db, 'attendance');
+const q = query(attendanceCollection, where('cons', '==', miConsecutivo));
+
+getDocs(q)
+  .then((querySnapshot) => {
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      console.log('Registro encontrado:', data);
+    });
+  })
+  .catch((error) => {
+    console.error('Error al realizar la consulta:', error);
+  });
+}

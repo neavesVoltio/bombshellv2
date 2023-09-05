@@ -37,7 +37,7 @@ onAuthStateChanged(auth, async(user) => {
         
         if(currentHostname == '/dashboard.html' && uid !== getAdmin[0]){
             // window.open(webDomain + '/index.html', '_self');
-            showMessages('Solo administradores', 'error')
+            // showMessages('Solo administradores', 'error')
             
         }
         return

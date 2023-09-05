@@ -159,30 +159,26 @@ Francisco Macías para Voltio
                 <div class="form-floating mb-3">
                   <select class="form-select" aria-label="status views" id="nombreEstilista" >
                     <option></option>
-                    <option>Ana</option>
-                    <option>Luisa</option>
+                    <option>Anabel</option>
+                    <option>Jared</option>
                   </select>
                   <label class="floatingInput">Nombre de la estilista</label>
                 </div>
                 
                 <div class="form-floating mb-3">
                   <input type="datetime-local" class="form-control"  id="fechaHoraAsistencia" aria-label="fechaHora" aria-describedby="precio-articulo">
-                  <label class="floatingInput">Fecha y hora</label>
+                  <label class="floatingInput">Fecha y hora de entrada</label>
                 </div>
                 <div class="form-floating mb-3">
-                  <select class="form-select" aria-label="status views" id="entradaSalida" >
-                    <option></option>
-                    <option>Entrada</option>
-                    <option>Salida</option>
-                  </select>
-                  <label class="floatingInput" >Entrada/Salida</label>
+                  <input type="time" class="form-control"  id="horaSalida" aria-label="fechaHora" aria-describedby="precio-articulo">
+                  <label class="floatingInput">Hora de salida</label>
                 </div>
                 <div class="form-floating mb-3">
-                  <input type="text" class="form-control" id="detallesDelSuceso" aria-label="Descripcion" aria-describedby="Descripcion">
+                  <input type="text" class="form-control bg-light" id="detallesDelSuceso" aria-label="Descripcion" aria-describedby="Descripcion">
                   <label class="floatingInput" >Comentarios del día</label>
                 </div>
-                  <input type="file" class="form-control mb-3" id="imagenSuceso" aria-label="Imagen" aria-describedby="Imagen">
-                <button class="btn btn-primary" id="guardarEvento">Guardar</button>
+                  
+                <button class="btn btn-primary" id="guardarEvento" data-bs-toggle="modal" >Guardar</button>
                 <div class="container row mt-3">
                   <div class="row search-container">
                     <div class="input-group mb-3">
@@ -206,19 +202,19 @@ Francisco Macías para Voltio
                           </tr>
                         </thead>
                         <tbody id="tableContent">
-                          <tr data-bs-toggle="modal" data-bs-target="#detalleDeAsistenciaModal">
+                          <tr data-bs-toggle="modal" data-bs-target="#detalleDeAsistenciaModal" class="tableRow"data-id="17">
                             <th class="">...</th>
                             <td class="">...</td>
                             <td class="">...</td>
                             <td class="">...</td>
                           </tr>
-                          <tr data-bs-toggle="modal" data-bs-target="#detalleDeAsistenciaModal">
+                          <tr data-bs-toggle="modal" data-bs-target="#detalleDeAsistenciaModal" class="tableRow" data-id="3">
                             <td class="">...</td>
                             <td class="">...</td>
                             <td class="">...</td>
                             <td class="">...</td>
                           </tr>
-                          <tr data-bs-toggle="modal" data-bs-target="#detalleDeAsistenciaModal">
+                          <tr data-bs-toggle="modal" data-bs-target="#detalleDeAsistenciaModal" class="tableRow" data-id="2">
                             <td class="">...</td>
                             <td class="">...</td>
                             <td class="">...</td>
@@ -248,19 +244,10 @@ Francisco Macías para Voltio
           <div class="modal-body">
             <p id="comentariosModal">En este espacio se cargan los comentarios que se hayan hecho ese día</p>
             <button type="button" class="btn btn-primary mb-2" id="editAsistencia">Ediar</button>
-            <div id="imagenesDeAsistencia">
-              <div class="row">
-                
-                  <img src="./images/Alaciado.webp" alt="" width="50px" class="mb-2">
-                
-                  <img src="./images/Alaciado.webp" alt="" width="50px" class="mb-2">
-                
-                  <img src="./images/Alaciado.webp" alt="" width="50px" class="mb-2">
-                
-                  <img src="./images/Alaciado.webp" alt="" width="50px" class="mb-2">
-                
-              </div>
-              
+            <h3>Elija las imagenes a subir para este día</h3>
+            <input type="file" class="form-control mb-3" id="customerFilesUpload" aria-label="Imagen" aria-describedby="Imagen">
+            <div class="row">
+            <div id="imagenesDeAsistencia"></div>
             </div>
           </div>
           <div class="modal-footer">
